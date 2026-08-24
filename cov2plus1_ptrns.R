@@ -32,7 +32,7 @@ if(!opt$skip){
   
   nc_tbl <- nc_tbl[, c('Nextclade_pango', 'partiallyAliased', 'substitutions')]
   
-  print('Finding discordant subs and lineages... Just FYI, this does not affect the filtration!')
+  print('Finding discordant subs and lineages... Discordant records are reported only and NOT filtered out.')
   nc_tbl_sub_diff_pango <-  nc_tbl %>% group_by(substitutions) %>% filter(n_distinct(partiallyAliased) > 1) %>% distinct(substitutions, partiallyAliased) %>% ungroup()
   nc_tbl_sub_diff_pango <- nc_tbl_sub_diff_pango[order(nc_tbl_sub_diff_pango$partiallyAliased), ]
   write.table(nc_tbl_sub_diff_pango[, c("partiallyAliased", "substitutions")], gsub('tsv', 'diff_pango.tsv', opt$nc_path), sep = '\t', row.names = FALSE, col.names = TRUE, quote = FALSE)
@@ -40,6 +40,11 @@ if(!opt$skip){
   
   
   nc_tbl <- unique(nc_tbl)
+
+  # Removing duplicates
+  nc_tbl$seqName_short <- gsub('\\|.*', '', nc_tbl$seqName)
+  dup_names <- nc_tbl$seqName_short[duplicated(nc_tbl$seqName_short)] %>% unique
+  nc_tbl <- nc_tbl[!(nc_tbl$seqName_short %in% dup_names), ]
   
   write.table(nc_tbl, gsub('tsv', 'short.tsv', opt$nc_path), sep = '\t', row.names = FALSE, col.names = TRUE, quote = FALSE)
   
