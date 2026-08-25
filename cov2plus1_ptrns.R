@@ -28,7 +28,6 @@ if(!opt$skip){
   print('Filtering...')
   nc_tbl <- read.table(opt$nc_path, sep = '\t', header = TRUE, quote = '', comment.char = '')
   nc_tbl <- nc_tbl[(nc_tbl$totalMissing <= 300 & nc_tbl$qc.overallStatus == 'good' & (nc_tbl$alignmentEnd - nc_tbl$alignmentStart > 29000)), c('seqName', 'Nextclade_pango', 'partiallyAliased', 'substitutions')]
-  write.table(nc_tbl, gsub('tsv', 'Nfiltered.tsv', opt$nc_path), sep = '\t', row.names = FALSE, col.names = TRUE, quote = FALSE)
   
   nc_tbl <- nc_tbl[, c('Nextclade_pango', 'partiallyAliased', 'substitutions')]
   
@@ -45,9 +44,8 @@ if(!opt$skip){
   nc_tbl$seqName_short <- gsub('\\|.*', '', nc_tbl$seqName)
   dup_names <- nc_tbl$seqName_short[duplicated(nc_tbl$seqName_short)] %>% unique
   nc_tbl <- nc_tbl[!(nc_tbl$seqName_short %in% dup_names), ]
-  
-  write.table(nc_tbl, gsub('tsv', 'short.tsv', opt$nc_path), sep = '\t', row.names = FALSE, col.names = TRUE, quote = FALSE)
-  
+
+  write.table(nc_tbl, gsub('tsv', 'filtered.tsv', opt$nc_path), sep = '\t', row.names = FALSE, col.names = TRUE, quote = FALSE)  
   
   nsub <- sapply(nc_tbl$substitutions, function(x) length(unss(x)))
   nsub_list <- sort(unique(nsub))
