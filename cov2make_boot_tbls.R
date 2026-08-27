@@ -1,7 +1,7 @@
 nextclade_path <- 'PATH TO NEXTCLADE OUTPUT IN *.tsv FORMAT AFTER FILTRATION, *.Nfiltered.tsv'
 meta_path <- 'PATH TO METADATA IN GISAID *.tsv FORMAT'
 write_path = 'PATH TO WRITE gisaid_nc_mrg'
-plus1_path = 'PATH TO cov2plus1_ptrns output'
+plus1_path = 'PATH TO cov2plus1_ptrns output, "from-to" table'
 world_boot_tbl_path = 'PATH TO world boot table'
 rus_boot_tbl_path = 'PATH TO Russian boot table'
 rus_boot_tbl_with_fd_path  = 'PATH TO Russian boot table with FD'
@@ -92,12 +92,7 @@ gisaid_nc_mrg$subregion <- sapply(gisaid_nc_mrg$country, function(x) ifelse(x %i
 write.table(gisaid_nc_mrg, write_path, sep = '\t', row.names = FALSE, quote = FALSE)
 
 
-p1m1_world <- readLines(plus1_path)
-p1m1_df <- data.frame(from = character(length(p1m1_world)), to = character(length(p1m1_world)))
-p1m1_df$from <- gsub(' -> .*', '', p1m1_world)
-p1m1_df$to <- gsub('.* -> ', '', p1m1_world)
-
-
+p1m1_df <- read.table(plus1_path, sep = '\t')
 
 
 
