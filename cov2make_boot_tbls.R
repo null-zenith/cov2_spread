@@ -92,7 +92,7 @@ gisaid_nc_mrg$subregion <- sapply(gisaid_nc_mrg$country, function(x) ifelse(x %i
 write.table(gisaid_nc_mrg, write_path, sep = '\t', row.names = FALSE, quote = FALSE)
 
 
-p1m1_df <- read.table(plus1_path, sep = '\t')
+p1m1_df <- read.table(plus1_path, sep = '\t', header = TRUE, quote = '')
 
 
 
