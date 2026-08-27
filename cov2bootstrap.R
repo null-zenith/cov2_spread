@@ -20,7 +20,7 @@ option_list = list(
   make_option("--boot_tbl", action="store", default=NA, type='character',
               help="Path to the table for bootstrap"),
   make_option("--p1m1_tbl", action="store", default=NA, type='character',
-              help="Path to p1m1 table, optional"),
+              help="Path to p1m1 table, optional; if is empty, only identical genomes are used"),
   make_option("--N", action="store", default=1000, type='numeric',
               help="Number of permutations"),
   make_option("--Nsub", action="store", default=NA, type='numeric',
