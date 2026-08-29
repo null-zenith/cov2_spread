@@ -8,7 +8,10 @@ Scripts for processing big SARS-CoV-2 data used in paper "Global and country-lev
 4. Run cov2bootstrap.R script. If boot_tbl is not passed as a parameter, connection is inferred ONLY from identical genomes.
 5. Run cov2aggregate.R script.
 
-
+to add:
+aggregate
+spread sim
+plot?
 
 
 
