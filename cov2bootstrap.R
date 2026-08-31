@@ -180,12 +180,10 @@ for(i in 1:opt$N){
   setkey(conn_tbl, to)
   setkey(boot_tmp, substitutions)
   
-  # First merge: inner join on 'to' (only keep rows where 'to' exists in boot_tmp$substitutions)
   mrgd <- unique(
     boot_tmp[conn_tbl, on = c(substitutions = "to"), nomatch = NULL, allow.cartesian = TRUE]
   )
   
-  # Second merge: inner join on 'from' (only keep rows where 'from' exists in boot_tmp$substitutions)
   setkey(mrgd, from)
   mrgd <- unique(
     boot_tmp[mrgd, on = c(substitutions = "from"), nomatch = NULL, allow.cartesian = TRUE]
@@ -204,7 +202,6 @@ for(i in 1:opt$N){
   rows_to_sort <- mrgd$from == mrgd$to
   
   
-  # sorting regions for equal values of 'from' and 'to', because their order doesn't matter
   if (any(rows_to_sort)) {
     vals <- as.matrix(mrgd[rows_to_sort, c("from.location", "to.location")])
     sorted_vals <- t(apply(vals, 1, sort))
