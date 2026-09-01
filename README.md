@@ -8,14 +8,6 @@ Scripts for processing big SARS-CoV-2 data used in paper "Global and country-lev
 4. Run cov2bootstrap.R script. If boot_tbl is not passed as a parameter, connection is inferred ONLY from identical genomes.
 5. Run cov2aggregate.R script.
 
-to add:
-aggregate
-spread sim
-plot?
-
-
-
-
 
 # Examples
 
@@ -29,3 +21,7 @@ an example of command line for cov2bootstrap.R
 ```
 cov2bootstrap.R --boot_tbl boot_tbl.example.tsv --p1m1_tbl p1m1_from_to.example.tsv --N 100 
 ```
+
+
+
+cov2INF_SIM is just a script that is run from the Rstudio, you need to pass the log-transformed RR table to it and run it manually to assess probability of importation inferred from RR table
