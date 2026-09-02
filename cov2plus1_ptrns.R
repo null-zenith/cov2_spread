@@ -114,5 +114,5 @@ tmp <- read.table(CON, sep = '\t', header = FALSE, quote = '')
 colnames(tmp) <- 'subs'
 tmp$from <- gsub(' -> .*', '', tmp$subs)
 tmp$to <- gsub('.* ->', '', tmp$subs)
-write.table(tmp[, c('from', 'to')], gsub('.txt', '_from_to.txt', CON), sep = '\t', row.names = FALSE, quote = FALSE)
+write.table(tmp[, c('from', 'to')], gsub('.txt', '_from_to.tsv', CON), sep = '\t', row.names = FALSE, quote = FALSE)
                           
