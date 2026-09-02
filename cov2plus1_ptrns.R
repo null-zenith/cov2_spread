@@ -110,9 +110,25 @@ for(i in 0:max(nsub)){
 }
 close(CON)
 
-tmp <- read.table(CON, sep = '\t', header = FALSE, quote = '')
-colnames(tmp) <- 'subs'
-tmp$from <- gsub(' -> .*', '', tmp$subs)
-tmp$to <- gsub('.* ->', '', tmp$subs)
-write.table(tmp[, c('from', 'to')], gsub('.txt', '_from_to.tsv', CON), sep = '\t', row.names = FALSE, quote = FALSE)
                           
+p1m1_world <- readLines(CON)
+
+p1m1_df <- data.frame(from = character(length(p1m1_world)), to = character(length(p1m1_world)))
+
+p1m1_df$from <- gsub(' -> .*', '', p1m1_world)
+p1m1_df$to <- gsub('.* -> ', '', p1m1_world)
+
+
+##################################################################################################FILTRATION OF AMBIGUOUS p1m1 CONNECTIONS
+p1m1_df_to <- unss(p1m1_df$to, split = ';')
+p1m1_df_to_dup <- p1m1_df_to[duplicated(p1m1_df_to)] %>% unique
+
+p1m1_df$to <- sapply(p1m1_df$to, function(x){
+  splt <- unss(x, split = ';')
+  paste0(splt[!(splt %in% p1m1_df_to_dup)], collapse = ';')
+})
+
+# dropping p1m1 pairs where no "to" genome left
+p1m1_df <- p1m1_df[p1m1_df$to != '', ]
+
+write.table(p1m1_df, gsub('.txt', '_from_to.tsv', CON), sep = '\t', row.names = FALSE, quote = FALSE)
