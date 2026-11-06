@@ -54,6 +54,7 @@ build_location_connections.v1 <- function(df) {
   
   df_from_split <- split(df$to.location, df$from)
   df_to_split <- split(df$from.location, df$to)
+  df_own <- split(df$from.location, df$from)
   
   df_ident <- df[df$from == df$to, ]
   ident_conn_by_ptrn <- split(df_ident$from.location, df_ident$from)
@@ -65,7 +66,7 @@ build_location_connections.v1 <- function(df) {
     if(i %% 10000 == 1) print(paste0('Analyzed ', i, ' ptrns...'))
     
     ident_conn <- ident_conn_by_ptrn[[ptrn]]
-    if(is.null(ident_conn)) ident_conn <- character(0)
+    if(is.null(ident_conn)) ident_conn <- df_own[[ptrn]]
     
     from_locs <- df_from_split[[ptrn]]
     to_locs <- df_to_split[[ptrn]]
