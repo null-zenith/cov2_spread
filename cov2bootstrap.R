@@ -22,9 +22,9 @@ option_list = list(
   make_option("--p1m1_tbl", action="store", default=NA, type='character',
               help="Path to p1m1 table, optional"),
   make_option("--N", action="store", default=1000, type='numeric',
-              help="Number of permutations; if N = 0, no bootstrap"),
+              help="Number of stratified bootstrap replications, sampling with replacement; if N = 0, no bootstrap, N = 0 overrides Nsub"),
   make_option("--Nsub", action="store", default=NA, type='numeric',
-              help="Number of genomes to sample, default = NA (uses all)"),
+              help="Number of genomes to sample, default = NA (uses all), if equal to numeric value, sampling is performed without replacement and stratification"),
   make_option("--out_folder", action="store", default='boot_tbl', type='character',
               help="Folder name of the bootstrap output, saved in the same forlder as boot table"))
 
@@ -129,8 +129,6 @@ if(opt$N == 0){
   
   boot_tmp <- copy(boot_tbl)
   
-
-  
   boot_tmp <- boot_tmp[!is.na(boot_tmp$substitutions), ] %>% unique
   
 
@@ -189,15 +187,26 @@ if(opt$N == 0){
   for(j in 1:opt$N){
     if ((j %% 10 == 1 & opt$N > 10) | (opt$N <= 10)) print(paste0('***************************************Starting iteration ', j))
     
-    Nsub <- ifelse(is.na(opt$Nsub), nrow(boot_tbl), opt$Nsub)
-    
-    boot_rows <- sample(1:nrow(boot_tbl), Nsub, replace = TRUE)
-    # print(paste0('boot rows:', Nsub))
-    boot_tmp <- boot_tbl[boot_rows, ]
-    
+    if(is.na(opt$Nsub)){
+      print('Stratified sampling mode running...')
+      boot_tmp <- boot_tbl %>%
+        group_by(across(2)) %>%
+        slice_sample(prop = 1, replace = TRUE) %>%
+        ungroup()
+    } else {
+      print('Subsampling mode running...')
+      boot_tmp <- boot_tbl %>%
+        slice_sample(n = opt$Nsub, replace = FALSE) %>%
+        ungroup()
+      
+      # boot_rows <- sample(1:nrow(boot_tbl), opt$Nsub, replace = TRUE)
+      # print(paste0('boot rows:', Nsub))
+      # boot_tmp <- boot_tbl[boot_rows, ]
+      
+    }
+
     boot_tmp <- boot_tmp[!is.na(boot_tmp$substitutions), ] %>% unique
-    
-    
+
     conn_tbl <- data.frame(from = copy(boot_tmp$substitutions), to = copy(boot_tmp$substitutions))
     
     
