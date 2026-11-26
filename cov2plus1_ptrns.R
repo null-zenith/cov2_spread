@@ -111,7 +111,8 @@ for(i in 0:max(nsub)){
 close(CON)
 
                           
-p1m1_world <- readLines(CON)
+path1 <- ifelse(dirname(opt$nc_path) == '.', 'plus1.txt', paste0(dirname(opt$nc_path), '/plus1.txt'))
+p1m1_world <- readLines(path1)
 
 p1m1_df <- data.frame(from = character(length(p1m1_world)), to = character(length(p1m1_world)))
 
@@ -131,4 +132,4 @@ p1m1_df$to <- sapply(p1m1_df$to, function(x){
 # dropping p1m1 pairs where no "to" genome left
 p1m1_df <- p1m1_df[p1m1_df$to != '', ]
 
-write.table(p1m1_df, gsub('.txt', '_from_to.tsv', CON), sep = '\t', row.names = FALSE, quote = FALSE)
+write.table(p1m1_df, gsub('.txt', '_from_to.tsv', path1), sep = '\t', row.names = FALSE, quote = FALSE)
