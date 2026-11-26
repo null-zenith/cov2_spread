@@ -30,7 +30,7 @@ if(!opt$skip){
   nc_tbl <- nc_tbl[(nc_tbl$totalMissing <= 300 & nc_tbl$qc.overallStatus == 'good' & (nc_tbl$alignmentEnd - nc_tbl$alignmentStart > 29000)), c('seqName', 'Nextclade_pango', 'partiallyAliased', 'substitutions')]
   write.table(nc_tbl, gsub('tsv', 'Nfiltered.tsv', opt$nc_path), sep = '\t', row.names = FALSE, col.names = TRUE, quote = FALSE)
 
-  nc_tbl <- nc_tbl[, c('Nextclade_pango', 'partiallyAliased', 'substitutions')]
+  nc_tbl <- nc_tbl[, c('seqName', 'Nextclade_pango', 'partiallyAliased', 'substitutions')]
   
   print('Finding discordant subs and lineages... Discordant records are reported only and NOT filtered out.')
   nc_tbl_sub_diff_pango <-  nc_tbl %>% group_by(substitutions) %>% filter(n_distinct(partiallyAliased) > 1) %>% distinct(substitutions, partiallyAliased) %>% ungroup()
@@ -63,7 +63,7 @@ if(!opt$skip){
 
 print('Finding plus one ...')
 CON <- file(paste0(dirname(opt$nc_path), '/plus1.txt'), 'a')
-print(CON)
+# print(CON)
 fls <- system(paste0('ls ', dirname(opt$nc_path), '/by_nsub/*.tsv'), intern = TRUE)
 
 nsub <- as.numeric(gsub('.tsv', '', basename(fls)))
